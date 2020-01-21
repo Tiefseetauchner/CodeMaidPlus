@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using static CMPlus.IndentAligner;
 
 namespace CMPlus.Tests
 {
     class Program
     {
+        static string singleIndent = "    ";
         static void Main()
         {
             var sw = new Stopwatch();
@@ -20,7 +21,7 @@ namespace CMPlus.Tests
             sw.Start();
             var formattedText = File.ReadAllText(file)
                                 .GetSyntaxRoot()
-                                .AlignIndents()
+                                .AlignIndents("    ")
                                 .ToFullString();
 
             Console.WriteLine(sw.Elapsed);
@@ -35,7 +36,7 @@ namespace CMPlus.Tests
         {
             var formattedText = File.ReadAllText(before)
                                     .GetSyntaxRoot()
-                                    .AlignIndents()
+                                    .AlignIndents(singleIndent)
                                     .ToString();
 
             File.WriteAllText(after, formattedText);
@@ -202,7 +203,7 @@ var reagentsIdentified = new ReagentsIdentified
                                     // .SortUsings()
                                     .RemoveXmlDocGaps()
                                     .FixBrackets()
-                                    .AlignIndents()
+                                    .AlignIndents(singleIndent)
                                     .ToString();
 
                 if (code != formattedCode)
@@ -220,7 +221,7 @@ var reagentsIdentified = new ReagentsIdentified
             var changes = new DecoratedView(code);
             var root = code.GetSyntaxRoot();
 
-            root = root.AlignIndents(changes.OnLineChanged);
+            root = root.AlignIndents(singleIndent, changes.OnLineChanged);
 
             if (printOut)
                 Console.WriteLine(changes);

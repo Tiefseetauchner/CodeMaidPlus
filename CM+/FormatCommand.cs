@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Composition.Hosting;
-using System.ComponentModel.Design;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.VisualStudio.ComponentModelHost;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel.Design;
+using System.Threading;
+using System.Windows;
 using Task = System.Threading.Tasks.Task;
 
 namespace CMPlus
@@ -39,6 +30,8 @@ namespace CMPlus
         /// VS Package that provides this command, not null.
         /// </summary>
         private readonly AsyncPackage package;
+
+        public static string singleIndent = "  ";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormatCommand"/> class.
@@ -92,10 +85,13 @@ namespace CMPlus
 
         public static SyntaxNode Process(SyntaxNode root)
         {
+
+
             return root.SortUsings()
                        .FixBrackets()
-                       .RemoveXmlDocGaps()
-                       .AlignIndents();
+                           .RemoveXmlDocGaps()
+                           // todo add parameter and read value her from visual studio config
+                           .AlignIndents(singleIndent);
         }
 
         /// <summary>
@@ -137,17 +133,17 @@ namespace CMPlus
             }
 
             Task.Run(() =>
-            {
-                Thread.Sleep(1000);
-                Microsoft.VisualStudio.Shell.ThreadHelper.Generic.BeginInvoke(() =>
-                {
-                    try
-                    {
-                        Global.SetStatusMessage(null);
-                    }
-                    catch { }
-                });
-            });
+        {
+            Thread.Sleep(1000);
+            Microsoft.VisualStudio.Shell.ThreadHelper.Generic.BeginInvoke(() =>
+              {
+                      try
+                      {
+                          Global.SetStatusMessage(null);
+                      }
+                      catch { }
+                  });
+        });
         }
     }
 }

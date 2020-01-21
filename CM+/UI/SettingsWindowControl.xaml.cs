@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace CMPlus
@@ -26,7 +23,7 @@ namespace CMPlus
 
         public class SettingsItem
         {
-            bool enabled;
+            private bool enabled;
 
             public bool Enabled
             {
@@ -222,9 +219,9 @@ namespace CMPlus
 
                         InUiThread(() =>
                         {
-                            this.progress.Visibility = Visibility.Collapsed;
-                            this.processDir.IsEnabled = true;
-                        });
+                                    this.progress.Visibility = Visibility.Collapsed;
+                                    this.processDir.IsEnabled = true;
+                                });
                     });
                 }
                 else
@@ -236,7 +233,7 @@ namespace CMPlus
             }
         }
 
-        string description;
+        private string description;
 
         public string Description
         {
@@ -244,7 +241,7 @@ namespace CMPlus
             set { description = value; PropChangeNotify(nameof(Description)); }
         }
 
-        string alignmentPreview;
+        private string alignmentPreview;
 
         public string AlignmentPreview
         {
@@ -252,7 +249,7 @@ namespace CMPlus
             set { alignmentPreview = value; PropChangeNotify(nameof(AlignmentPreview)); }
         }
 
-        string alignmentInput = @"var lineScan = new LineScan
+        private string alignmentInput = @"var lineScan = new LineScan
 {
     LineNumber = text.LineNumber,
    TimeScaned = text.TimeLoaded,
@@ -272,9 +269,9 @@ namespace CMPlus
             set { alignmentInput = value; PropChangeNotify(nameof(AlignmentInput)); }
         }
 
-        void PropChangeNotify(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private void PropChangeNotify(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        static void InUiThread(Action action) => Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, action);
+        private static void InUiThread(Action action) => Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, action);
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -312,7 +309,7 @@ namespace CMPlus
             var resultCode = new IndentAligner.DecoratedView(AlignmentInput);
 
             AlignmentInput.GetSyntaxRoot()
-                          .AlignIndents(resultCode.OnLineChanged);
+                          .AlignIndents(FormatCommand.singleIndent, resultCode.OnLineChanged);
 
             AlignmentPreview = resultCode.ToString();
         }

@@ -70,7 +70,8 @@ namespace CMPlus
                                                                      .TakeWhile(char.IsWhiteSpace)
                                                                      .Join();
 
-                                        var newLindeIndent = originalLineIndent + IndentAligner.Aligner.singleIndent;
+                                        // TODO (christoph.tauchner): refactore to be a parameter 
+                                        var newLindeIndent = originalLineIndent + "    ";
                                         var tokensOutsideLimit = lineTokens.TakeAfter(tokensWithinLimit.Last());
 
                                         int lengthOfNewLine = originalLineIndent.Length +
@@ -97,8 +98,8 @@ namespace CMPlus
                                         if (lengthOfNewLine >= lengthLimit ||
                                             (tokensOutsideLimit.Count() == 1 && tokensOutsideLimit.First().Text.Length == 1))
                                             return;
-
-                                        indents[lastTokenWithinLimit] = originalLineIndent + IndentAligner.Aligner.singleIndent;
+                                        // TODO (christoph.tauchner): refactore to be a parameter
+                                        indents[lastTokenWithinLimit] = originalLineIndent + "    ";
 
                                         var parentNode = lastTokenWithinLimit.Parent;
 
@@ -108,7 +109,8 @@ namespace CMPlus
                                                           .WithLeadingTrivia(oldNode.GetLeadingTrivia())
                                                           .WithTrailingTrivia(oldNode.GetTrailingTrivia()
                                                                                      .Add(SyntaxFactory.CarriageReturnLineFeed)
-                                                                                     .Add(SyntaxFactory.Whitespace(originalLineIndent + IndentAligner.Aligner.singleIndent)));
+                                                                                     // TODO (christoph.tauchner): refactore to be a parameter
+                                                                                     .Add(SyntaxFactory.Whitespace(originalLineIndent + "    ")));
                                         };
                                     }
                                 }
